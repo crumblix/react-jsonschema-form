@@ -6,6 +6,7 @@ function RadioWidget({
   options,
   value,
   required,
+  readonly,
   disabled,
   autofocus,
   onChange
@@ -26,7 +27,7 @@ function RadioWidget({
               checked={checked}
               name={name}
               value={option.value}
-              disabled={disabled}
+              disabled={disabled || readonly}
               autoFocus={autofocus && i === 0}
               onChange={_ => onChange(option.value)}/>
             <span>{option.label}</span>
@@ -63,6 +64,7 @@ if (process.env.NODE_ENV !== "production") {
     }).isRequired,
     value: PropTypes.any,
     required: PropTypes.bool,
+    readonly: PropTypes.bool,
     autofocus: PropTypes.bool,
     onChange: PropTypes.func,
   };
