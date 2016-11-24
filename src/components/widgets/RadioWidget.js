@@ -13,7 +13,18 @@ function RadioWidget({
 }) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
-  const {enumOptions, inline} = options;
+  const {inline} = options;
+  var {enumOptions} = options;
+  var { enumLabel,enumValue } = schema;
+  if (!enumValue) {
+    enumValue = "value";
+  }
+  if (!enumLabel) {
+    enumLabel = "label";
+  }  
+  if (!enumOptions) {
+    enumOptions = [];
+  }
   return (
     <div className="field-radio-group">{
       enumOptions.map((option, i) => {
@@ -24,12 +35,12 @@ function RadioWidget({
             <input type="radio"
               name={name}
               required={required}
-              value={option.value}
+              value={option[enumValue]}
               checked={checked}
               disabled={disabled || readonly}
               autoFocus={autofocus && i === 0}
-              onChange={_ => onChange(option.value)}/>
-            {option.label}
+              onChange={_ => onChange(option[enumValue])}/>
+            {option[enumLabel]}
           </span>
         );
 
