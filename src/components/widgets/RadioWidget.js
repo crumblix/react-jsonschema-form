@@ -17,7 +17,7 @@ function RadioWidget({
   // checked={checked} has been moved above name={name}, As mentioned in #349;
   // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
   var {enumOptions} = options;
-  var { enumLabel,enumValue } = schema;
+  var {enumLabel,enumValue} = schema;
   if (!enumValue) {
     enumValue = "value";
   }
