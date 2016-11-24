@@ -26,6 +26,7 @@ function RadioWidget({
             <input type="radio"
               checked={checked}
               name={name}
+              required={required}
               value={option.value}
               disabled={disabled || readonly}
               autoFocus={autofocus && i === 0}
