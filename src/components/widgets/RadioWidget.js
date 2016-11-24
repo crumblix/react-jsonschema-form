@@ -13,9 +13,20 @@ function RadioWidget({
 }) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
-  const {enumOptions, inline} = options;
+  const {inline} = options;
   // checked={checked} has been moved above name={name}, As mentioned in #349;
   // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
+  var {enumOptions} = options;
+  var { enumLabel,enumValue } = schema;
+  if (!enumValue) {
+    enumValue = "value";
+  }
+  if (!enumLabel) {
+    enumLabel = "label";
+  }  
+  if (!enumOptions) {
+    enumOptions = [];
+  }
   return (
     <div className="field-radio-group">{
       enumOptions.map((option, i) => {
@@ -27,11 +38,16 @@ function RadioWidget({
               checked={checked}
               name={name}
               required={required}
+<<<<<<< 9d8c1b22218e16ec446d0238763a9457f2ca4590
               value={option.value}
+=======
+              value={option[enumValue]}
+              checked={checked}
+>>>>>>> Merge
               disabled={disabled || readonly}
               autoFocus={autofocus && i === 0}
-              onChange={_ => onChange(option.value)}/>
-            {option.label}
+              onChange={_ => onChange(option[enumValue])}/>
+            {option[enumLabel]}
           </span>
         );
 
