@@ -38,12 +38,7 @@ function RadioWidget({
               checked={checked}
               name={name}
               required={required}
-<<<<<<< 9d8c1b22218e16ec446d0238763a9457f2ca4590
-              value={option.value}
-=======
               value={option[enumValue]}
-              checked={checked}
->>>>>>> Merge
               disabled={disabled || readonly}
               autoFocus={autofocus && i === 0}
               onChange={_ => onChange(option[enumValue])}/>
