@@ -42,7 +42,7 @@ function RadioWidget({
               disabled={disabled || readonly}
               autoFocus={autofocus && i === 0}
               onChange={_ => onChange(option[enumValue])}/>
-            <span>{option[enumValue]}</span>
+            <span>{option[enumLabel]}</span>
           </span>
         );
 
