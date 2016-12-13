@@ -171,7 +171,10 @@ function SchemaField(props) {
 
   const {type} = schema;
   const id = idSchema.$id;
-  const label = props.schema.title || schema.title || name;
+  const label = props.schema.title || schema.title;
+  if (!label) {
+    displayLabel = false;
+  }   
   const description = props.schema.description || schema.description;
   const errors = __errors;
   const help = uiSchema["ui:help"];
