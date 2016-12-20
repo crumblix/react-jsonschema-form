@@ -108,9 +108,14 @@ class ArrayField extends Component {
 
   onDropIndexClick = (index) => {
     return (event) => {
+      var hasCheck = false;
+      if (this.props.uiSchema.items.length > 0) {
+        hasCheck = (this.props.uiSchema.items[0]["ui:nextline"] && this.props.uiSchema.items[0]["ui:widget"] == "checkbox");
+      }
+      
       event.preventDefault();
       var newitems = this.state.items.filter((_, i) => i !== index);
-      if (newitems.length == 0) {
+      if (newitems.length == 0 || (hasCheck && newitems.length == 1)) {
         newitems = undefined;
       }
       this.asyncSetState({
@@ -318,7 +323,6 @@ class ArrayField extends Component {
               Array.isArray(uiSchema.items) ?
                 uiSchema.items[index] : uiSchema.items || {};
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
-
             return this.renderArrayFieldItem({
               index,
               canRemove: additional,
@@ -354,8 +358,11 @@ class ArrayField extends Component {
     itemErrorSchema,
     autofocus
   }) {
+    if (index == 0 && itemUiSchema["ui:nextline"] && itemUiSchema["ui:widget"] == "checkbox") {
+      return "";
+    }
     const {SchemaField} = this.props.registry.fields;
-    const {disabled, readonly, uiSchema} = this.props;
+    const {disabled, readonly, uiSchema, schema, errorSchema, idSchema} = this.props;
     const {orderable, removable} = {
       orderable: true,
       removable: true,
@@ -369,9 +376,60 @@ class ArrayField extends Component {
     has.toolbar = Object.keys(has).some(key => has[key]);
     const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
+    var hasCheck = false;
+    if (uiSchema.items.length > 0) {
+      hasCheck = (uiSchema.items[0]["ui:nextline"] && uiSchema.items[0]["ui:widget"] == "checkbox");
+    }
+
+    var checkItemSchema = null;
+    var checkItemIdSchema = null;
+    var checkItemUiSchema = null;
+    var checkItemErrorSchema = null;
+
+    var renderCheck = hasCheck && (index == 1);
+    if (renderCheck) {
+      const { definitions } = this.props.registry;
+      const itemSchemas = schema.items.map(item =>
+        retrieveSchema(item, definitions));
+      const additionalSchema = allowAdditionalItems(schema) ?
+        retrieveSchema(schema.additionalItems, definitions) : null;
+
+      const checkAdditional = index-1 >= itemSchemas.length;
+      checkItemSchema = checkAdditional ?
+        additionalSchema : itemSchemas[index-1];
+      var checkItemIdPrefix = idSchema.$id + "_" + index-1;
+      checkItemIdSchema = toIdSchema(checkItemSchema, checkItemIdPrefix, definitions);
+      checkItemUiSchema = checkAdditional ?
+        uiSchema.additionalItems || {} :
+        Array.isArray(uiSchema.items) ?
+          uiSchema.items[index-1] : uiSchema.items || {};
+      checkItemErrorSchema = errorSchema ? errorSchema[index-1] : undefined;
+    }
     return (
       <div key={index} className="array-item">
-        <div className={has.toolbar ? "col-xs-9" : "col-xs-12"}>
+        {
+          hasCheck ?
+            <div className="col-xs-1">
+              {
+                renderCheck ? 
+                  <SchemaField
+                    schema={checkItemSchema}
+                    uiSchema={checkItemUiSchema}
+                    formData={this.state.items[0]}
+                    errorSchema={checkItemErrorSchema}
+                    idSchema={checkItemIdSchema}
+                    required={this.isItemRequired(checkItemSchema)}
+                    onChange={this.onChangeForIndex(0)}
+                    registry={this.props.registry}
+                    disabled={this.props.disabled}
+                    readonly={this.props.readonly}
+                    autofocus={autofocus}/>
+                : ""
+              }
+            </div>
+          : ""
+        }
+        <div className={has.toolbar ? hasCheck ? "col-xs-8" : "col-xs-9" : hasCheck ? "col-xs-11" : "col-xs-12"}>
           <SchemaField
             schema={itemSchema}
             uiSchema={itemUiSchema}
@@ -386,7 +444,7 @@ class ArrayField extends Component {
             autofocus={autofocus}/>
         </div>
         {
-          has.toolbar ?
+          has.toolbar ?<div>
             <div className="col-xs-3 array-item-toolbox">
               <div className="btn-group" style={{display: "flex", justifyContent: "space-around"}}>
                 {has.moveUp || has.moveDown ?
@@ -411,6 +469,9 @@ class ArrayField extends Component {
                           onClick={this.onDropIndexClick(index)}/>
                   : null}
               </div>
+            </div>
+            <div className="col-xs-12" >
+            </div>
             </div>
           : null
         }
