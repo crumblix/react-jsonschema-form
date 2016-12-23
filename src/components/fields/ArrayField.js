@@ -358,7 +358,7 @@ class ArrayField extends Component {
     itemErrorSchema,
     autofocus
   }) {
-    if (index == 0 && itemUiSchema["ui:nextline"] && itemUiSchema["ui:widget"] == "checkbox") {
+    if (index == 0 && itemUiSchema && itemUiSchema["ui:nextline"] && itemUiSchema["ui:widget"] == "checkbox") {
       return "";
     }
     const {SchemaField} = this.props.registry.fields;
@@ -377,7 +377,7 @@ class ArrayField extends Component {
     const btnStyle = {flex: 1, paddingLeft: 6, paddingRight: 6, fontWeight: "bold"};
 
     var hasCheck = false;
-    if (uiSchema.items.length > 0) {
+    if (uiSchema && uiSchema.items && uiSchema.items.length > 0) {
       hasCheck = (uiSchema.items[0]["ui:nextline"] && uiSchema.items[0]["ui:widget"] == "checkbox");
     }
 
