@@ -1,7 +1,6 @@
-import React, {Component, PropTypes} from "react";
+import React, { Component, PropTypes } from "react";
 
-import {deepEquals} from "../../utils";
-import {Tabs, Tab} from "react-bootstrap";
+import { deepEquals } from "../../utils";
 
 import {
   getDefaultFormState,
@@ -12,6 +11,62 @@ import {
   setState
 } from "../../utils";
 
+
+class Selector extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { current: 0 };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
+  }
+
+  onLabelClick = (index) => {
+    //this.setState({current: index});
+    return (event) => {
+      event.preventDefault();
+      this.setState({ current: index });
+      //setImmediate(() => this.props.onSelected(samples[label]));
+    };
+  };
+
+  render() {
+    const { schemaFields, schema, orderedProperties } = this.props;
+    let childProps = (
+      <div className="tab-content">{
+        orderedProperties.map((name, index) => {
+          return (<div className={this.state.current === index ? "tab-pane fade in active" : "tab-pane fade"}>
+            <br />
+            {schemaFields[index]}
+          </div>
+          );
+        })
+      }</div>
+    );
+
+    return (
+      <div>
+        <ul className="nav nav-tabs">{
+          orderedProperties.map((name, index) => {
+            let tabTitle = (schema.properties[name].title === undefined) ? name : schema.properties[name].title;
+            return (
+              <li className={this.state.current === index ? "active" : ""}>
+                <a data-toggle="tab"
+                  onClick={this.onLabelClick(index)}>
+                  {tabTitle}
+                </a>
+              </li>
+            );
+          })
+
+        }
+        </ul>
+        {childProps}
+      </div>
+    );
+  }
+}
 
 function objectKeysHaveChanged(formData, state) {
   // for performance, first check for lengths
@@ -71,7 +126,7 @@ class ObjectField extends Component {
       schema.required.indexOf(name) !== -1;
   }
 
-  asyncSetState(state, options={validate: false}) {
+  asyncSetState(state, options = { validate: false }) {
     setState(this, state, () => {
       this.props.onChange(this.state, options);
     });
@@ -79,7 +134,7 @@ class ObjectField extends Component {
 
   onPropertyChange = (name) => {
     return (value, options) => {
-      this.asyncSetState({[name]: value}, options);
+      this.asyncSetState({ [name]: value }, options);
     };
   };
 
@@ -106,7 +161,7 @@ class ObjectField extends Component {
     } catch (err) {
       return (
         <div>
-          <p className="config-error" style={{color: "red"}}>
+          <p className="config-error" style={{ color: "red" }}>
             Invalid {name || "root"} object field configuration:
             <em>{err.message}</em>.
           </p>
@@ -114,55 +169,58 @@ class ObjectField extends Component {
         </div>
       );
     }
-    let orderedProps = orderedProperties.map((name, index) => {
-      if (isTab) {
-        let tabTitle = (schema.properties[name].title === undefined) ? name : schema.properties[name].title;
-        return (<Tab eventKey={index+1} title={tabTitle}><br />
-          <SchemaField key={index}
-            name={name}
-            required={this.isRequired(name)}
-            schema={schema.properties[name]}
-            uiSchema={uiSchema[name]}
-            errorSchema={errorSchema[name]}
-            idSchema={idSchema[name]}
-            formData={this.state[name]}
-            onChange={this.onPropertyChange(name)}
-            registry={this.props.registry}
-            disabled={disabled}
-            readonly={readonly}
-            tabPanel={true}/>
-          </Tab>
-          );
-      } else {
+    let orderedProps = null;
+    if (isTab) {
+      let schemaFields = orderedProperties.map((name, index) => {
         return (<SchemaField key={index}
-            name={name}
-            required={this.isRequired(name)}
-            schema={schema.properties[name]}
-            uiSchema={uiSchema[name]}
-            errorSchema={errorSchema[name]}
-            idSchema={idSchema[name]}
-            formData={this.state[name]}
-            onChange={this.onPropertyChange(name)}
-            registry={this.props.registry}
-            disabled={disabled}
-            readonly={readonly}/>
-          );
-      }
-    });
+          name={name}
+          required={this.isRequired(name)}
+          schema={schema.properties[name]}
+          uiSchema={uiSchema[name]}
+          errorSchema={errorSchema[name]}
+          idSchema={idSchema[name]}
+          formData={this.state[name]}
+          onChange={this.onPropertyChange(name)}
+          registry={this.props.registry}
+          disabled={disabled}
+          readonly={readonly}
+          tabPanel={true} />
+        );
+      });
+      orderedProps = [
+        <Selector schemaFields={schemaFields} schema={schema} orderedProperties={orderedProperties} />,
+      ];
+    } else {
+      orderedProps = orderedProperties.map((name, index) => {
+        return (<SchemaField key={index}
+          name={name}
+          required={this.isRequired(name)}
+          schema={schema.properties[name]}
+          uiSchema={uiSchema[name]}
+          errorSchema={errorSchema[name]}
+          idSchema={idSchema[name]}
+          formData={this.state[name]}
+          onChange={this.onPropertyChange(name)}
+          registry={this.props.registry}
+          disabled={disabled}
+          readonly={readonly} />
+        );
+      });
+    }
 
     return (
       <fieldset>
         {title && !tabPanel ? <TitleField
-                   id={`${idSchema.$id}__title`}
-                   title={title}
-                   required={required}
-                   formContext={formContext}/> : null}
+          id={`${idSchema.$id}__title`}
+          title={title}
+          required={required}
+          formContext={formContext} /> : null}
         {schema.description ?
           <DescriptionField
             id={`${idSchema.$id}__description`}
             description={schema.description}
-            formContext={formContext}/> : null}
-        {isTab ? <Tabs defaultActiveKey={1} id={`${idSchema.$id}__tab`}>{orderedProps}</Tabs> : <div>{orderedProps}</div>}          
+            formContext={formContext} /> : null}
+        <div>{orderedProps}</div>
       </fieldset>
     );
   }
