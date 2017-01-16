@@ -1,0 +1,66 @@
+import React from "react";
+
+module.exports = {
+  schema: {
+    title: "Tabs",
+    type: "object",
+    properties: {
+      stringFormats: {
+        type: "object",
+        title: "String formats",
+        properties: {
+          email: {
+            type: "string",
+            format: "email",
+            title: "Email"
+          },
+          uri: {
+            type: "string",
+            format: "uri",
+            title: "URI"
+          }
+        }
+      },
+      boolean: {
+        type: "object",
+        title: "Boolean field",
+        properties: {
+          default: {
+            type: "boolean",
+            title: "checkbox (default)"
+          },
+          radio: {
+            type: "boolean",
+            title: "radio buttons"
+          },
+          select: {
+            type: "boolean",
+            title: "select box"
+          }
+        }
+      },
+    }
+  },
+  uiSchema: {
+    "ui:tab": true,
+    boolean: {
+      radio: {
+        "ui:widget": "radio"
+      },
+      select: {
+        "ui:widget": "select"
+      }
+    },
+  },
+  formData: {
+    stringFormats: {
+      email: "chuck@norris.net",
+      uri: "http://chucknorris.com/",
+    },
+    boolean: {
+      default: true,
+      radio: true,
+      select: true
+    },
+  }
+};

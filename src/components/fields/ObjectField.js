@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from "react";
 
 import {deepEquals} from "../../utils";
-
+import {Tabs, Tab} from "react-bootstrap";
 
 import {
   getDefaultFormState,
@@ -91,13 +91,15 @@ class ObjectField extends Component {
       name,
       required,
       disabled,
-      readonly
+      readonly,
+      tabPanel
     } = this.props;
     const {definitions, fields, formContext} = this.props.registry;
     const {SchemaField, TitleField, DescriptionField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
     const title = (schema.title === undefined) ? name : schema.title;
     let orderedProperties;
+    let isTab = uiSchema["ui:tab"] ? true : false;
     try {
       const properties = Object.keys(schema.properties);
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
@@ -112,9 +114,45 @@ class ObjectField extends Component {
         </div>
       );
     }
+    let orderedProps = orderedProperties.map((name, index) => {
+      if (isTab) {
+        let tabTitle = (schema.properties[name].title === undefined) ? name : schema.properties[name].title;
+        return (<Tab eventKey={index+1} title={tabTitle}><br />
+          <SchemaField key={index}
+            name={name}
+            required={this.isRequired(name)}
+            schema={schema.properties[name]}
+            uiSchema={uiSchema[name]}
+            errorSchema={errorSchema[name]}
+            idSchema={idSchema[name]}
+            formData={this.state[name]}
+            onChange={this.onPropertyChange(name)}
+            registry={this.props.registry}
+            disabled={disabled}
+            readonly={readonly}
+            tabPanel={true}/>
+          </Tab>
+          );
+      } else {
+        return (<SchemaField key={index}
+            name={name}
+            required={this.isRequired(name)}
+            schema={schema.properties[name]}
+            uiSchema={uiSchema[name]}
+            errorSchema={errorSchema[name]}
+            idSchema={idSchema[name]}
+            formData={this.state[name]}
+            onChange={this.onPropertyChange(name)}
+            registry={this.props.registry}
+            disabled={disabled}
+            readonly={readonly}/>
+          );
+      }
+    });
+
     return (
       <fieldset>
-        {title ? <TitleField
+        {title && !tabPanel ? <TitleField
                    id={`${idSchema.$id}__title`}
                    title={title}
                    required={required}
@@ -124,24 +162,8 @@ class ObjectField extends Component {
             id={`${idSchema.$id}__description`}
             description={schema.description}
             formContext={formContext}/> : null}
-        {
-        orderedProperties.map((name, index) => {
-          return (
-            <SchemaField key={index}
-              name={name}
-              required={this.isRequired(name)}
-              schema={schema.properties[name]}
-              uiSchema={uiSchema[name]}
-              errorSchema={errorSchema[name]}
-              idSchema={idSchema[name]}
-              formData={this.state[name]}
-              onChange={this.onPropertyChange(name)}
-              registry={this.props.registry}
-              disabled={disabled}
-              readonly={readonly}/>
-          );
-        })
-      }</fieldset>
+        {isTab ? <Tabs defaultActiveKey={1} id={`${idSchema.$id}__tab`}>{orderedProps}</Tabs> : <div>{orderedProps}</div>}          
+      </fieldset>
     );
   }
 }

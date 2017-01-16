@@ -129,7 +129,7 @@ DefaultTemplate.defaultProps = {
 };
 
 function SchemaField(props) {
-  const {uiSchema, errorSchema, idSchema, name, required, registry} = props;
+  const {uiSchema, errorSchema, idSchema, name, tabPanel, required, registry} = props;
   const {definitions, fields, formContext, FieldTemplate = DefaultTemplate} = registry;
   const schema = retrieveSchema(props.schema, definitions);
   const FieldComponent = getFieldComponent(schema, uiSchema, fields);
@@ -165,6 +165,7 @@ function SchemaField(props) {
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
+      tabPanel={tabPanel}
       errorSchema={fieldErrorSchema}
       formContext={formContext}/>
   );
@@ -220,6 +221,7 @@ SchemaField.defaultProps = {
   disabled: false,
   readonly: false,
   autofocus: false,
+  tabPanel: false,
 };
 
 if (process.env.NODE_ENV !== "production") {
