@@ -109,7 +109,7 @@ class ArrayField extends Component {
   onDropIndexClick = (index) => {
     return (event) => {
       var hasCheck = false;
-      if (this.props.uiSchema.items.length > 0) {
+      if (this.props.uiSchema.items && this.props.uiSchema.items.length > 0) {
         hasCheck = (this.props.uiSchema.items[0]["ui:nextline"] && this.props.uiSchema.items[0]["ui:widget"] == "checkbox");
       }
       
