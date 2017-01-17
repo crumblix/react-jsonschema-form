@@ -118,7 +118,7 @@ function computeDefaults(schema, parentDefaults, definitions={}) {
     defaults = schema.default;
   } else if ("enum" in schema && Array.isArray(schema.enum)) {
     // For enum with no defined default, select the first entry.
-    defaults = schema.enum[0];
+    //defaults = schema.enum[0];
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
