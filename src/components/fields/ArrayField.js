@@ -429,7 +429,7 @@ class ArrayField extends Component {
             </div>
           : ""
         }
-        <div className={has.toolbar ? hasCheck ? "col-xs-8" : "col-xs-9" : hasCheck ? "col-xs-11" : "col-xs-12"}>
+        <div className={has.toolbar ? hasCheck ? "col-xs-8 array-item-middle" : "col-xs-9 array-item-middle" : hasCheck ? "col-xs-10 array-item-middle" : "col-xs-12 array-item-middle"}>
           <SchemaField
             schema={itemSchema}
             uiSchema={itemUiSchema}
