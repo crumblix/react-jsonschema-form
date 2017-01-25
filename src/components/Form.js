@@ -74,9 +74,9 @@ export default class Form extends Component {
     return null;
   }
 
-  onChange = (formData, options={validate: false}) => {
+  onChange = (formData, options={validate: false}, name) => {
     const mustValidate = !this.props.noValidate && (this.props.liveValidate || options.validate);
-    let state = {status: "editing", formData};
+    let state = {status: "editing", formData, lastEdit: name};
     if (mustValidate) {
       const {errors, errorSchema} = this.validate(formData);
       state = {...state, errors, errorSchema};
