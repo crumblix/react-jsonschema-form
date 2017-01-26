@@ -84,9 +84,9 @@ class ArrayField extends Component {
     return itemsSchema.type === "string" && itemsSchema.minLength > 0;
   }
 
-  asyncSetState(state, options={validate: false}, name) {
+  asyncSetState(state, options={validate: false}) {
     setState(this, state, () => {
-      this.props.onChange(this.state.items, options, name);
+      this.props.onChange(this.state.items, options);
     });
   }
 
@@ -102,7 +102,7 @@ class ArrayField extends Component {
     this.asyncSetState({
       items: items.concat([
         getDefaultFormState(itemSchema, undefined, definitions)
-      ],undefined,this.props.name)
+      ])
     });
   };
 
@@ -120,7 +120,7 @@ class ArrayField extends Component {
       }
       this.asyncSetState({
         items: newitems
-      }, {validate: true},this.props.name); // refs #195
+      }, {validate: true}); // refs #195
     };
   };
 
@@ -139,7 +139,7 @@ class ArrayField extends Component {
             return item;
           }
         })
-      }, {validate: true},this.props.name);
+      }, {validate: true});
     };
   };
 
@@ -149,12 +149,12 @@ class ArrayField extends Component {
         items: this.state.items.map((item, i) => {
           return index === i ? value : item;
         })
-      },undefined,this.props.name);
+      });
     };
   };
 
   onSelectChange = (value) => {
-    this.asyncSetState({items: value},undefined,this.props.name);
+    this.asyncSetState({items: value});
   };
 
   render() {
