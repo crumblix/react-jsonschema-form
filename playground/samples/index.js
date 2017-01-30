@@ -13,6 +13,7 @@ import validation from "./validation";
 import files from "./files";
 import single from "./single";
 import tabs from "./tabs";
+import hidden from "./hidden";
 
 export const samples = {
   Simple: simple,
@@ -29,5 +30,6 @@ export const samples = {
   Validation: validation,
   Files: files,
   Single: single,
-  Tabs: tabs
+  Tabs: tabs,
+  Hidden: hidden
 };
