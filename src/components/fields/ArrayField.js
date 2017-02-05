@@ -210,8 +210,9 @@ class ArrayField extends Component {
             const itemIdSchema = toIdSchema(itemsSchema, itemIdPrefix, definitions);
             return this.renderArrayFieldItem({
               index,
-              canMoveUp: index > 0,
-              canMoveDown: index < items.length - 1,
+              canRemove: !readonly,
+              canMoveUp: index > 0 && !readonly,
+              canMoveDown: index < items.length - 1 && !readonly,
               itemSchema: itemsSchema,
               itemIdSchema,
               itemErrorSchema,
@@ -325,9 +326,9 @@ class ArrayField extends Component {
             const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
             return this.renderArrayFieldItem({
               index,
-              canRemove: additional,
-              canMoveUp: index >= itemSchemas.length + 1,
-              canMoveDown: additional && index < items.length - 1,
+              canRemove: additional && !readonly,
+              canMoveUp: index >= itemSchemas.length + 1 && !readonly,
+              canMoveDown: additional && index < items.length - 1 && !readonly,
               itemSchema,
               itemData: item,
               itemUiSchema,
