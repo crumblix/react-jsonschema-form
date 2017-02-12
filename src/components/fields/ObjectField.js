@@ -36,7 +36,7 @@ class Selector extends Component {
     let childProps = (
       <div className="tab-content">{
         orderedProperties.map((name, index) => {
-          return (<div className={this.state.current === index ? "tab-pane fade in active" : "tab-pane fade"}>
+          return (<div key={"tabc" + name + index.toString()} className={this.state.current === index ? "tab-pane fade in active" : "tab-pane fade"}>
             <br />
             {schemaFields[index]}
           </div>
@@ -51,7 +51,7 @@ class Selector extends Component {
           orderedProperties.map((name, index) => {
             let tabTitle = (schema.properties[name].title === undefined) ? name : schema.properties[name].title;
             return (
-              <li className={this.state.current === index ? "active" : ""}>
+              <li key={"li" + name + index.toString()} className={this.state.current === index ? "active" : ""}>
                 <a data-toggle="tab"
                   onClick={this.onLabelClick(index)}>
                   {tabTitle}
@@ -189,7 +189,7 @@ class ObjectField extends Component {
         );
       });
       orderedProps = [
-        <Selector schemaFields={schemaFields} schema={schema} orderedProperties={orderedProperties} />,
+        <Selector key="selectorkey" schemaFields={schemaFields} schema={schema} orderedProperties={orderedProperties} />,
       ];
     } else {
       orderedProps = orderedProperties.map((name, index) => {
