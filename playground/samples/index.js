@@ -14,6 +14,7 @@ import files from "./files";
 import single from "./single";
 import tabs from "./tabs";
 import hidden from "./hidden";
+import test from "./test";
 
 export const samples = {
   Simple: simple,
@@ -31,5 +32,6 @@ export const samples = {
   Files: files,
   Single: single,
   Tabs: tabs,
-  Hidden: hidden
+  Hidden: hidden,
+  Test: test
 };
