@@ -153,9 +153,10 @@ class ObjectField extends Component {
     const {definitions, fields, formContext} = this.props.registry;
     const {SchemaField, TitleField, DescriptionField} = fields;
     const schema = retrieveSchema(this.props.schema, definitions);
-    const title = (schema.title === undefined) ? name : schema.title;
+    const title = (schema.title === undefined) ? "" : schema.title;
     let orderedProperties;
     let isTab = uiSchema["ui:tab"] ? true : false;
+    let isTwoColumn = uiSchema["ui:twocolumn"] ? true : false;
     try {
       const properties = Object.keys(schema.properties);
       orderedProperties = orderProperties(properties, uiSchema["ui:order"]);
@@ -191,6 +192,39 @@ class ObjectField extends Component {
       orderedProps = [
         <Selector key="selectorkey" schemaFields={schemaFields} schema={schema} orderedProperties={orderedProperties} />,
       ];
+    } else if (isTwoColumn) {
+      let schemaFields = orderedProperties.map((name, index) => {
+        return (<SchemaField key={index}
+          name={name}
+          required={this.isRequired(name)}
+          schema={schema.properties[name]}
+          uiSchema={uiSchema[name]}
+          errorSchema={errorSchema[name]}
+          idSchema={idSchema[name]}
+          formData={this.state[name]}
+          onChange={this.onPropertyChange(name)}
+          registry={this.props.registry}
+          disabled={disabled}
+          readonly={readonly}
+          tabPanel={true} />
+        );
+      });
+      /*
+      orderedProps = [
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-1">{schemaFields[0]}</div>
+            <div className="col-11">{schemaFields[1]}</div>
+          </div> 
+        </div>
+      ];
+      */
+      orderedProps = [<table width="100%">
+  <tr>
+    <td>{schemaFields[0]}</td>
+    <td>{schemaFields[1]}</td>
+  </tr>
+</table>];
     } else {
       orderedProps = orderedProperties.map((name, index) => {
         return (<SchemaField key={index}
