@@ -209,22 +209,14 @@ class ObjectField extends Component {
           tabPanel={true} />
         );
       });
-      /*
-      orderedProps = [
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-1">{schemaFields[0]}</div>
-            <div className="col-11">{schemaFields[1]}</div>
-          </div> 
+      orderedProps = [<div className="array-item">
+        <div className="col-xs-1">
+            {schemaFields[0]}
         </div>
-      ];
-      */
-      orderedProps = [<table width="100%">
-  <tr>
-    <td>{schemaFields[0]}</td>
-    <td>{schemaFields[1]}</td>
-  </tr>
-</table>];
+        <div className= "col-xs-11 array-item-middle">
+            {schemaFields[1]}
+        </div>
+      </div>];
     } else {
       orderedProps = orderedProperties.map((name, index) => {
         return (<SchemaField key={index}

@@ -35,7 +35,7 @@ function BooleanField(props) {
     schema={schema}
     id={idSchema && idSchema.$id}
     onChange={onChange}
-    label={title === undefined ? name : title}
+    label={title === undefined ? "" : title}
     value={defaultFieldValue(formData, schema)}
     required={required}
     disabled={disabled}
